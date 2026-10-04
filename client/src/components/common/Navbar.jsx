@@ -28,11 +28,15 @@ export const Navbar = () => {
 
   const isActive = (path) => location.pathname === path;
 
-  // Extract user initials
-  const getInitials = (name) => {
+  // Extract user initials or role acronym for phone numbers
+  const getInitials = (name, role) => {
     if (!name) return 'CB';
-    return name
-      .split(' ')
+    const clean = String(name).trim();
+    if (/^\d+$/.test(clean)) {
+      return role === 'FACULTY' ? 'FA' : role === 'CANTEEN_STAFF' ? 'STF' : 'ST';
+    }
+    return clean
+      .split(/\s+/)
       .map((n) => n[0])
       .slice(0, 2)
       .join('')
@@ -41,15 +45,15 @@ export const Navbar = () => {
 
   return (
     <header className="sticky-header">
-      <div className="container">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px' }}>
+      <div className="container" style={{ width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
           
           {/* Brand Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none', flexShrink: 0 }}>
             <div
               style={{
-                width: '42px',
-                height: '42px',
+                width: '40px',
+                height: '40px',
                 borderRadius: '12px',
                 backgroundColor: 'var(--brand-primary)',
                 display: 'flex',
@@ -59,24 +63,25 @@ export const Navbar = () => {
                 boxShadow: 'var(--shadow-warm)'
               }}
             >
-              <UtensilsCrossed size={22} strokeWidth={2.5} />
+              <UtensilsCrossed size={20} strokeWidth={2.5} />
             </div>
             <div>
               <span
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: '1.45rem',
+                  fontSize: '1.35rem',
                   fontWeight: 800,
                   letterSpacing: '-0.02em',
                   color: 'var(--text-primary)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '2px'
+                  gap: '2px',
+                  lineHeight: 1.1
                 }}
               >
                 Campus<span style={{ color: 'var(--brand-primary)' }}>Bite</span>
               </span>
-              <span className="brand-subtitle" style={{ display: 'block', fontSize: '0.68rem', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '-4px' }}>
+              <span className="brand-subtitle" style={{ display: 'block', fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '-2px' }}>
                 Smart Canteen Pre-Order
               </span>
             </div>
@@ -167,7 +172,7 @@ export const Navbar = () => {
           </nav>
 
           {/* Action Area: Cart & Auth */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             
             {/* Cart Trigger Button */}
             {!isStaff && (
@@ -176,14 +181,17 @@ export const Navbar = () => {
                 className="btn btn-outline"
                 style={{
                   position: 'relative',
-                  padding: '0.55rem 0.95rem',
-                  minHeight: '44px',
-                  borderRadius: 'var(--radius-md)'
+                  padding: '0.45rem 0.8rem',
+                  minHeight: '38px',
+                  borderRadius: 'var(--radius-md)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
                 }}
                 aria-label="Open food cart"
               >
-                <ShoppingBag size={19} color="var(--color-brand-primary)" />
-                <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>Tray</span>
+                <ShoppingBag size={18} color="var(--color-brand-primary)" />
+                <span style={{ fontWeight: 700, fontSize: '0.88rem' }}>Tray</span>
                 {itemCount > 0 && (
                   <span
                     style={{
@@ -192,10 +200,10 @@ export const Navbar = () => {
                       right: '-6px',
                       backgroundColor: 'var(--brand-primary)',
                       color: '#ffffff',
-                      fontSize: '0.75rem',
+                      fontSize: '0.72rem',
                       fontWeight: 700,
-                      width: '22px',
-                      height: '22px',
+                      width: '20px',
+                      height: '20px',
                       borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
@@ -211,27 +219,28 @@ export const Navbar = () => {
 
             {/* User Session Affordance */}
             {user ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 {/* Avatar Initials Badge */}
                 <Link
                   to={isStaff ? '/staff/orders' : '/profile'}
                   style={{
-                    width: '38px',
-                    height: '38px',
+                    width: '36px',
+                    height: '36px',
                     borderRadius: '50%',
                     backgroundColor: isStaff ? '#2563eb' : 'var(--brand-primary)',
                     color: '#ffffff',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '0.85rem',
+                    fontSize: '0.82rem',
                     fontWeight: 800,
                     boxShadow: 'var(--shadow-xs)',
-                    textDecoration: 'none'
+                    textDecoration: 'none',
+                    flexShrink: 0
                   }}
                   title={`${user.name} (${user.role}) - View Profile`}
                 >
-                  {getInitials(user.name)}
+                  {getInitials(user.name, user.role)}
                 </Link>
 
                 <Link
@@ -263,12 +272,12 @@ export const Navbar = () => {
 
                 <button
                   onClick={handleLogout}
-                  className="btn btn-ghost btn-sm"
+                  className="btn btn-ghost btn-sm desktop-logout-btn"
                   title="Sign Out"
-                  style={{ color: 'var(--text-secondary)', padding: '0.35rem 0.65rem', minHeight: '40px' }}
+                  style={{ display: 'none', color: 'var(--text-secondary)', padding: '0.35rem 0.65rem', minHeight: '38px', alignItems: 'center', gap: '0.35rem' }}
                 >
-                  <LogOut size={17} />
-                  <span style={{ display: 'none' }} className="logout-text">Logout</span>
+                  <LogOut size={16} />
+                  <span className="logout-text">Logout</span>
                 </button>
               </div>
             ) : (
@@ -408,6 +417,7 @@ export const Navbar = () => {
         @media (min-width: 768px) {
           .desktop-nav { display: flex !important; }
           .desktop-auth-btns { display: flex !important; }
+          .desktop-logout-btn { display: flex !important; }
           .user-badge-text { display: flex !important; }
           .logout-text { display: inline !important; }
         }
