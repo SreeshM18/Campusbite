@@ -424,3 +424,23 @@
   }
 }
 
+/* --------------------------------------------------------------------------
+   Dedicated Web & Mobile View Rules
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .web-figma-hero {
+    grid-template-columns: 1fr !important;
+    gap: 3rem !important;
+    padding: 3rem 2rem !important;
+    text-align: center;
+  }
+  .web-figma-hero h1 {
+    font-size: 2.5rem !important;
+  }
+}
+
+.mobile-app-view {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+

@@ -6,14 +6,18 @@ import { CartDrawer } from '../cart/CartDrawer';
 import { StickyMobileCartBar } from '../cart/StickyMobileCartBar';
 import { ToastProvider } from '../ui/Toast';
 import { ErrorBoundary } from '../ui/ErrorBoundary';
+import { useDeviceView } from '../../utils/useDeviceView';
 
 /**
  * CampusBite Core AppShell Layout Primitive
  * Unifies Header, Navigation, Sticky Cart, Footer, Toast notifications & Error boundaries.
+ * Intelligently adapts between Desktop Website and Mobile App layouts.
  */
 export const AppShell = ({ children }) => {
   const location = useLocation();
+  const { isMobile } = useDeviceView();
   const isStaffRoute = location.pathname.startsWith('/staff');
+  const isMobileHome = isMobile && location.pathname === '/';
 
   if (isStaffRoute) {
     return (
@@ -39,14 +43,14 @@ export const AppShell = ({ children }) => {
             color: 'var(--color-text-primary)'
           }}
         >
-          {/* Header Navigation */}
-          <Navbar />
+          {/* Header Navigation (Hidden on mobile home to allow native app bar) */}
+          {!isMobileHome && <Navbar />}
 
           {/* Side Cart Drawer */}
           <CartDrawer />
 
-          {/* Sticky Mobile Bar */}
-          <StickyMobileCartBar />
+          {/* Sticky Mobile Bar (Shown on non-home mobile routes) */}
+          {!isMobileHome && <StickyMobileCartBar />}
 
           {/* Main Dynamic Content Area */}
           <main
@@ -61,10 +65,12 @@ export const AppShell = ({ children }) => {
             {children}
           </main>
 
-          {/* Footer */}
-          <Footer />
+          {/* Footer (Hidden on mobile home for clean app feed) */}
+          {!isMobileHome && <Footer />}
         </div>
       </ToastProvider>
     </ErrorBoundary>
   );
 };
+
+export default AppShell;
