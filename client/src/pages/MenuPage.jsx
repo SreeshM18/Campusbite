@@ -52,8 +52,9 @@ export const MenuPage = () => {
       setLoading(true);
       setError(null);
       const res = await menuApi.getMenu();
-      if (res.success && res.data) {
-        setRawMenuItems(res.data);
+      const items = res.data || res.menuItems || res.items || (Array.isArray(res) ? res : []);
+      if (Array.isArray(items)) {
+        setRawMenuItems(items);
       }
     } catch (err) {
       console.error('[Menu Fetch Error]:', err);

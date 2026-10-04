@@ -27,8 +27,9 @@ export const HomePage = () => {
       try {
         setLoading(true);
         const res = await menuApi.getMenu({ featured: true });
-        if (res.success && res.data) {
-          setFeaturedItems(res.data.slice(0, 4));
+        const items = res.data || res.menuItems || res.items || (Array.isArray(res) ? res : []);
+        if (Array.isArray(items) && items.length > 0) {
+          setFeaturedItems(items.slice(0, 4));
         }
       } catch (err) {
         console.warn('Failed to load featured items:', err);

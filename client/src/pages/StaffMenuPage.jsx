@@ -116,7 +116,7 @@ export const StaffMenuPage = () => {
       const res = await menuApi.getStaffMenu(params);
 
       if (res && res.success) {
-        setMenuItems(res.data || []);
+        setMenuItems(res.data || res.menuItems || res.items || []);
         if (res.stats) {
           setStats(res.stats);
         }

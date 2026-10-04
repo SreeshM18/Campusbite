@@ -54,11 +54,11 @@ export const StaffDashboardPage = () => {
         orderApi.getStaffStats()
       ]);
 
-      if (ordersRes && ordersRes.success && ordersRes.data) {
-        setOrders(ordersRes.data);
+      if (ordersRes && ordersRes.success) {
+        setOrders(ordersRes.data || ordersRes.orders || []);
       }
-      if (statsRes && statsRes.success && statsRes.stats) {
-        setStats(statsRes.stats);
+      if (statsRes && statsRes.success) {
+        setStats(statsRes.stats || statsRes.data || { totalOrders: 0, pending: 0, preparing: 0, ready: 0, completed: 0, revenue: 0 });
       }
       setLastSyncTime(new Date());
     } catch (err) {

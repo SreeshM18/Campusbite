@@ -35,7 +35,20 @@ function setLocalStore(key, value) {
 // Initialize seed menu with deterministic ObjectIds
 function getInitMenu() {
   const existing = getLocalStore(STORAGE_KEYS.MENU, null);
-  if (existing && Array.isArray(existing) && existing.length > 0) return existing;
+  if (existing && Array.isArray(existing) && existing.length > 0) {
+    // Heal existing items if subcategory or foodType missing
+    if (existing[0] && (!existing[0].subcategory || !existing[0].foodType)) {
+      const healed = existing.map((item, idx) => ({
+        ...item,
+        subcategory: item.subcategory || item.subCategory || initialMenuItems[idx]?.subcategory || 'ALL',
+        subCategory: item.subcategory || item.subCategory || initialMenuItems[idx]?.subcategory || 'ALL',
+        foodType: item.foodType || initialMenuItems[idx]?.foodType || 'VEG'
+      }));
+      setLocalStore(STORAGE_KEYS.MENU, healed);
+      return healed;
+    }
+    return existing;
+  }
 
   const initialized = initialMenuItems.map((item, idx) => ({
     _id: `dish_${String(idx + 1).padStart(4, '0')}`,
@@ -43,12 +56,14 @@ function getInitMenu() {
     description: item.description,
     price: item.price,
     category: item.category,
-    subCategory: item.subcategory || item.subCategory,
-    foodType: item.foodType,
+    subcategory: item.subcategory || item.subCategory || 'ALL',
+    subCategory: item.subcategory || item.subCategory || 'ALL',
+    foodType: item.foodType || 'VEG',
     imageUrl: item.image || '/images/masala_dosa.jpg',
     image: item.image || '/images/masala_dosa.jpg',
     isAvailable: item.available !== false,
     available: item.available !== false,
+    availabilityStatus: item.available !== false ? 'AVAILABLE' : 'UNAVAILABLE',
     prepTimeMinutes: item.preparationTime || 10,
     preparationTime: item.preparationTime || 10,
     isFeatured: !!item.featured,
@@ -80,7 +95,7 @@ async function handleMockFallback(endpoint, options = {}) {
       createdAt: new Date().toISOString()
     };
     setLocalStore(STORAGE_KEYS.USER, user);
-    return { success: true, message: 'Account registered successfully', user };
+    return { success: true, message: 'Account registered successfully', user, data: user };
   }
 
   if (path === '/auth/login' && method === 'POST') {
@@ -94,7 +109,7 @@ async function handleMockFallback(endpoint, options = {}) {
       createdAt: new Date().toISOString()
     };
     setLocalStore(STORAGE_KEYS.USER, user);
-    return { success: true, message: 'Signed in successfully', user };
+    return { success: true, message: 'Signed in successfully', user, data: user };
   }
 
   if (path === '/auth/logout' && method === 'POST') {
@@ -109,14 +124,14 @@ async function handleMockFallback(endpoint, options = {}) {
       err.status = 401;
       throw err;
     }
-    return { success: true, user };
+    return { success: true, user, data: user };
   }
 
   if (path === '/auth/profile' && method === 'PATCH') {
     const currentUser = getLocalStore(STORAGE_KEYS.USER, { name: 'Student', role: 'STUDENT' });
     const updated = { ...currentUser, name: body.name || currentUser.name };
     setLocalStore(STORAGE_KEYS.USER, updated);
-    return { success: true, message: 'Profile updated', user: updated };
+    return { success: true, message: 'Profile updated', user: updated, data: updated };
   }
 
   if (path === '/auth/password' && method === 'PATCH') {
@@ -129,14 +144,17 @@ async function handleMockFallback(endpoint, options = {}) {
     const category = params.get('category');
     const foodType = params.get('foodType');
     const search = params.get('search')?.toLowerCase();
+    const featured = params.get('featured');
 
     if (category && category !== 'ALL') menu = menu.filter((m) => m.category === category);
     if (foodType && foodType !== 'ALL') menu = menu.filter((m) => m.foodType === foodType);
-    if (search) menu = menu.filter((m) => m.name.toLowerCase().includes(search) || m.description?.toLowerCase().includes(search));
+    if (featured === 'true') menu = menu.filter((m) => m.featured || m.isFeatured);
+    if (search) menu = menu.filter((m) => m.name.toLowerCase().includes(search) || m.description?.toLowerCase().includes(search) || m.subcategory?.toLowerCase().includes(search));
 
     return {
       success: true,
       count: menu.length,
+      data: menu,
       menuItems: menu,
       items: menu
     };
@@ -151,7 +169,7 @@ async function handleMockFallback(endpoint, options = {}) {
       item.available = item.isAvailable;
       setLocalStore(STORAGE_KEYS.MENU, menu);
     }
-    return { success: true, menuItem: item };
+    return { success: true, data: item, menuItem: item };
   }
 
   // 3. Orders Handlers
@@ -161,9 +179,9 @@ async function handleMockFallback(endpoint, options = {}) {
     const token = `CB-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const items = (body.items || []).map((item) => {
-      const found = menu.find((m) => m._id === item.menuItem || m._id === item.id);
+      const found = menu.find((m) => m._id === item.menuItem || m._id === item.id || m._id === item.menuItemId);
       return {
-        menuItem: item.menuItem || item.id,
+        menuItem: item.menuItem || item.id || item.menuItemId,
         name: item.name || found?.name || 'Delicious Dish',
         price: item.price || found?.price || 60,
         quantity: item.quantity || 1
@@ -189,19 +207,19 @@ async function handleMockFallback(endpoint, options = {}) {
 
     const existingOrders = getLocalStore(STORAGE_KEYS.ORDERS, []);
     setLocalStore(STORAGE_KEYS.ORDERS, [order, ...existingOrders]);
-    return { success: true, order, message: 'Order placed successfully' };
+    return { success: true, data: order, order, message: 'Order placed successfully' };
   }
 
   if (path === '/orders/my' && method === 'GET') {
     const orders = getLocalStore(STORAGE_KEYS.ORDERS, []);
-    return { success: true, count: orders.length, orders };
+    return { success: true, count: orders.length, data: orders, orders };
   }
 
   if (path.startsWith('/orders/') && !path.includes('staff') && method === 'GET') {
     const id = path.split('/')[2];
     const orders = getLocalStore(STORAGE_KEYS.ORDERS, []);
     const order = orders.find((o) => o._id === id || o.token === id) || orders[0];
-    return { success: true, order: order || null };
+    return { success: true, data: order || null, order: order || null };
   }
 
   if (path.startsWith('/orders/') && path.endsWith('/status') && method === 'PATCH') {
@@ -212,24 +230,26 @@ async function handleMockFallback(endpoint, options = {}) {
       order.status = body.status;
       setLocalStore(STORAGE_KEYS.ORDERS, orders);
     }
-    return { success: true, order };
+    return { success: true, data: order, order };
   }
 
   if (path === '/orders/staff/all' && method === 'GET') {
     const orders = getLocalStore(STORAGE_KEYS.ORDERS, []);
-    return { success: true, count: orders.length, orders };
+    return { success: true, count: orders.length, data: orders, orders };
   }
 
   if (path === '/orders/staff/stats' && method === 'GET') {
     const orders = getLocalStore(STORAGE_KEYS.ORDERS, []);
+    const stats = {
+      pendingCount: orders.filter((o) => o.status === 'PENDING').length,
+      preparingCount: orders.filter((o) => o.status === 'PREPARING').length,
+      readyCount: orders.filter((o) => o.status === 'READY').length,
+      completedCount: orders.filter((o) => o.status === 'COMPLETED').length
+    };
     return {
       success: true,
-      stats: {
-        pendingCount: orders.filter((o) => o.status === 'PENDING').length,
-        preparingCount: orders.filter((o) => o.status === 'PREPARING').length,
-        readyCount: orders.filter((o) => o.status === 'READY').length,
-        completedCount: orders.filter((o) => o.status === 'COMPLETED').length
-      }
+      data: stats,
+      stats
     };
   }
 
