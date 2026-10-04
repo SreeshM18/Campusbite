@@ -1,0 +1,194 @@
+/* ==========================================================================
+   CampusBite Typography System
+   Fonts: Outfit (Display/Headings), Plus Jakarta Sans (Body/UI), Space Mono (Tokens)
+   ========================================================================== */
+
+:root {
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Space Mono', 'SF Mono', Consolas, monospace;
+}
+
+/* --------------------------------------------------------------------------
+   Heading & Display Scale
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--color-text-primary);
+  line-height: 1.22;
+  letter-spacing: -0.018em;
+  margin: 0;
+}
+
+/* Display / Hero */
+.type-display {
+  font-family: var(--font-display);
+  font-size: 2.75rem; /* 44px */
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 768px) {
+  .type-display {
+    font-size: 2.15rem; /* 34px on mobile */
+  }
+}
+
+/* Page Title (H1) */
+.type-h1, h1 {
+  font-family: var(--font-display);
+  font-size: 2.15rem; /* 34px */
+  font-weight: 800;
+  line-height: 1.20;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .type-h1, h1 {
+    font-size: 1.75rem; /* 28px on mobile */
+  }
+}
+
+/* Section Title (H2) */
+.type-h2, h2 {
+  font-family: var(--font-display);
+  font-size: 1.65rem; /* 26px */
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+@media (max-width: 768px) {
+  .type-h2, h2 {
+    font-size: 1.4rem; /* 22px on mobile */
+  }
+}
+
+/* Subsection / Card Title (H3) */
+.type-h3, h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem; /* 20px */
+  font-weight: 700;
+  line-height: 1.30;
+  letter-spacing: -0.01em;
+}
+
+/* Small Group Title (H4) */
+.type-h4, h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem; /* 17px */
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* --------------------------------------------------------------------------
+   Body Typography
+   -------------------------------------------------------------------------- */
+.type-body-lg {
+  font-family: var(--font-body);
+  font-size: 1.05rem; /* 17px */
+  font-weight: 400;
+  line-height: 1.60;
+  color: var(--color-text-secondary);
+}
+
+.type-body, body, p {
+  font-family: var(--font-body);
+  font-size: 0.925rem; /* 15px */
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--color-text-primary);
+}
+
+.type-body-sm {
+  font-family: var(--font-body);
+  font-size: 0.825rem; /* 13px */
+  font-weight: 400;
+  line-height: 1.50;
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   UI Labels & Metadata
+   -------------------------------------------------------------------------- */
+.type-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem; /* 12px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  line-height: 1;
+}
+
+.type-caption {
+  font-family: var(--font-body);
+  font-size: 0.78rem; /* 12.5px */
+  font-weight: 500;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.type-metadata {
+  font-family: var(--font-body);
+  font-size: 0.72rem; /* 11.5px */
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   Price Typography (Tabular Figures)
+   -------------------------------------------------------------------------- */
+.type-price {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+.type-price-lg {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  font-feature-settings: "tnum" 1;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.type-price-currency {
+  font-family: var(--font-body);
+  font-size: 0.95em;
+  font-weight: 700;
+  margin-right: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   Special Campus Token Typography (CB-1042)
+   -------------------------------------------------------------------------- */
+.type-token {
+  font-family: var(--font-mono);
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-brand-primary);
+  font-feature-settings: "tnum" 1, "zero" 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.type-token-sm {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-brand-primary);
+}

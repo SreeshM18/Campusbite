@@ -1,0 +1,197 @@
+/* ==========================================================================
+   CampusBite Layout & Utility Classes
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Container Primitives & Fluid Layout Anchors
+   -------------------------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container-standard);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter-desktop);
+  padding-right: var(--gutter-desktop);
+}
+
+.container-narrow {
+  width: 100%;
+  max-width: var(--container-narrow);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter-desktop);
+  padding-right: var(--gutter-desktop);
+}
+
+.container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter-wide);
+  padding-right: var(--gutter-wide);
+}
+
+.container-form {
+  width: 100%;
+  max-width: var(--container-form);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter-desktop);
+  padding-right: var(--gutter-desktop);
+}
+
+@media (min-width: 1440px) {
+  .container, .container-narrow, .container-wide, .container-form {
+    padding-left: var(--gutter-wide);
+    padding-right: var(--gutter-wide);
+  }
+}
+
+@media (max-width: 1024px) {
+  .container, .container-narrow, .container-wide, .container-form {
+    padding-left: var(--gutter-tablet);
+    padding-right: var(--gutter-tablet);
+  }
+}
+
+@media (max-width: 640px) {
+  .container, .container-narrow, .container-wide, .container-form {
+    padding-left: var(--gutter-mobile);
+    padding-right: var(--gutter-mobile);
+  }
+}
+
+@media (max-width: 359px) {
+  .container, .container-narrow, .container-wide, .container-form {
+    padding-left: var(--gutter-mobile-sm);
+    padding-right: var(--gutter-mobile-sm);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Density Hierarchy (Relaxed, Standard, Compact)
+   -------------------------------------------------------------------------- */
+/* Standard Student Mode (Default) */
+.density-standard {
+  --space-unit: var(--space-4);
+  --gap-grid: var(--space-5);
+  --padding-card: var(--space-4);
+}
+
+/* Relaxed Marketing / Splash Mode */
+.density-relaxed {
+  --space-unit: var(--space-8);
+  --gap-grid: var(--space-8);
+  --padding-card: var(--space-6);
+}
+
+/* Compact Kitchen Staff / Inventory Queue Mode */
+.density-compact {
+  --space-unit: var(--space-2);
+  --gap-grid: var(--space-3);
+  --padding-card: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Grid & Form Utilities
+   -------------------------------------------------------------------------- */
+.form-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .form-grid-2col {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+.form-grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 900px) {
+  .form-grid-3col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .form-grid-3col {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+/* Responsive Table Wrapper with Touch Momentum Scrolling */
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-lg);
+}
+
+/* --------------------------------------------------------------------------
+   Flex & Grid Utilities
+   -------------------------------------------------------------------------- */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+
+.grid { display: grid; }
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+
+/* --------------------------------------------------------------------------
+   Accessibility & Interactive Primitives
+   -------------------------------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.min-touch-target {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.min-touch-target-lg {
+  min-width: var(--touch-target-lg);
+  min-height: var(--touch-target-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Focus Ring */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
