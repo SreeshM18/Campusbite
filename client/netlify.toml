@@ -1,21 +1,19 @@
 # ==============================================================================
-# CampusBite — Root Monorepo Netlify Configuration
+# CampusBite — Client Directory Netlify Configuration
 # ==============================================================================
 
 [build]
-  command = "npm --prefix client install && npm --prefix client run build"
-  publish = "client/dist"
+  command = "npm install && npm run build"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
 
-# Single Page Application (SPA) Routing Rewrite
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Security & Performance Headers
 [[headers]]
   for = "/*"
   [headers.values]
