@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MobileAppHeader } from './MobileAppHeader';
+import { MobileCategoryTabs } from './MobileCategoryTabs';
+import { MobileFloatingCard } from './MobileFloatingCard';
 import { MobileHeroBanner } from './MobileHeroBanner';
-import { MobileQuickCategories } from './MobileQuickCategories';
-import { MobileFoodFeed } from './MobileFoodFeed';
 import { MobileBottomNav } from './MobileBottomNav';
 import { initialMenuItems } from '../../data/fallbackMenu';
 import { menuApi } from '../../services/api';
-import { CreditCard, Sparkles, ChevronRight, Zap, Award } from 'lucide-react';
+import { ChevronRight, Sparkles, CreditCard } from 'lucide-react';
 
 export const MobileHomePage = () => {
   const [dishes, setDishes] = useState(() => initialMenuItems);
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeTab, setActiveTab] = useState('all');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,17 +29,17 @@ export const MobileHomePage = () => {
     fetchDishes();
   }, []);
 
-  const handleSelectCategory = (categoryId) => {
-    setActiveCategory(categoryId);
-    if (categoryId !== 'all') {
-      navigate(`/menu?category=${encodeURIComponent(categoryId)}`);
-    } else {
-      navigate('/menu');
-    }
-  };
+  // Filter dishes by active tab
+  const filteredDishes =
+    activeTab === 'all'
+      ? dishes
+      : dishes.filter(
+          (d) =>
+            d.category?.toLowerCase() === activeTab.toLowerCase() ||
+            (activeTab === 'Healthy' && (d.dietary === 'veg' || d.category === 'Healthy'))
+        );
 
-  const trendingDishes = dishes.filter((d) => d.featured).slice(0, 5);
-  const popularDishes = dishes.slice(5, 12);
+  const displayDishes = filteredDishes.slice(0, 10);
 
   return (
     <div
@@ -48,77 +48,97 @@ export const MobileHomePage = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        backgroundColor: 'var(--color-canvas)',
+        backgroundColor: 'var(--color-canvas, #f8fafc)',
         paddingBottom: '5.5rem'
       }}
     >
-      {/* 1. Mobile App Top Bar */}
+      {/* 1. Header (Menu + Location + "Delicious food for you" + Search) */}
       <MobileAppHeader />
 
-      {/* Main Mobile Feed Body */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1.25rem',
-          padding: '1rem'
-        }}
-      >
-        {/* 2. Mobile Promo Carousel Banner */}
+      {/* 2. Horizontal Underlined Tabs + See More */}
+      <div style={{ padding: '0 1.25rem 0.5rem 1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <MobileCategoryTabs activeTab={activeTab} onSelectTab={setActiveTab} />
+          </div>
+          <Link
+            to="/menu"
+            style={{
+              fontSize: '0.78rem',
+              fontWeight: 700,
+              color: '#FA4A0C',
+              textDecoration: 'none',
+              marginLeft: '0.75rem',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            see more
+          </Link>
+        </div>
+      </div>
+
+      {/* 3. 2-Column Grid of Signature Elevated Floating Cards */}
+      <div style={{ padding: '0 1rem 1rem 1rem' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gap: '1rem',
+            marginTop: '0.5rem'
+          }}
+        >
+          {displayDishes.map((dish) => (
+            <MobileFloatingCard key={dish._id || dish.id} dish={dish} />
+          ))}
+        </div>
+      </div>
+
+      {/* 4. Promo Carousel Banner */}
+      <div style={{ padding: '0.5rem 1rem 1rem 1rem' }}>
         <MobileHeroBanner />
+      </div>
 
-        {/* 3. Story Circles Category Selector */}
-        <MobileQuickCategories
-          activeCategory={activeCategory}
-          onSelectCategory={handleSelectCategory}
-        />
-
-        {/* 4. Quick Campus Wallet & Meal Pass Card */}
+      {/* 5. Campus Meal Pass & Wallet Card */}
+      <div style={{ padding: '0 1rem 1.5rem 1rem' }}>
         <div
           style={{
             background: 'linear-gradient(135deg, #1E293B 0%, #0F172A 100%)',
-            borderRadius: 'var(--radius-lg, 16px)',
-            padding: '1rem 1.15rem',
+            borderRadius: '22px',
+            padding: '1.15rem',
             color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            boxShadow: 'var(--shadow-xs)',
+            boxShadow: 'var(--shadow-sm)',
             cursor: 'pointer'
           }}
           onClick={() => navigate('/profile')}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
             <div
               style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '10px',
-                backgroundColor: 'rgba(255, 107, 0, 0.2)',
-                color: 'var(--brand-primary)',
+                width: '42px',
+                height: '42px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(250, 74, 12, 0.2)',
+                color: '#FA4A0C',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}
             >
-              <CreditCard size={20} />
+              <CreditCard size={22} />
             </div>
             <div>
-              <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>Student Meal Pass Active</div>
-              <div style={{ fontSize: '0.74rem', color: '#94A3B8' }}>Tap to view balance & recharge</div>
+              <div style={{ fontWeight: 800, fontSize: '0.92rem' }}>Student Meal Pass Active</div>
+              <div style={{ fontSize: '0.76rem', color: '#94A3B8' }}>Tap to view balance & recharge</div>
             </div>
           </div>
           <ChevronRight size={18} color="#94A3B8" />
         </div>
-
-        {/* 5. Trending Today Feed */}
-        <MobileFoodFeed dishes={trendingDishes} title="🔥 Trending on Campus" />
-
-        {/* 6. Popular Dishes Feed */}
-        <MobileFoodFeed dishes={popularDishes} title="⭐ Chef Recommendations" />
       </div>
 
-      {/* 7. Bottom Navigation Bar */}
+      {/* 6. Bottom Navigation Bar */}
       <MobileBottomNav />
     </div>
   );

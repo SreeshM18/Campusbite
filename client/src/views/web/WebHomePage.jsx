@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { WebHeroFigma } from './WebHeroFigma';
 import { WebCategoryBar } from './WebCategoryBar';
+import { WebFoodieSection } from './WebFoodieSection';
 import { WebFeaturedDishes } from './WebFeaturedDishes';
 import { WebBenefitsSection } from './WebBenefitsSection';
 import { WebSpecialOffers } from './WebSpecialOffers';
@@ -10,25 +11,23 @@ import { menuApi } from '../../services/api';
 import { Store, Zap, Sparkles } from 'lucide-react';
 
 export const WebHomePage = () => {
-  const [featuredItems, setFeaturedItems] = useState(() =>
-    initialMenuItems.filter((i) => i.featured).slice(0, 8)
-  );
+  const [dishes, setDishes] = useState(() => initialMenuItems);
   const [activeCategory, setActiveCategory] = useState('all');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchFeatured = async () => {
+    const fetchDishes = async () => {
       try {
-        const res = await menuApi.getMenu({ featured: true });
+        const res = await menuApi.getMenu();
         const items = res.data || res.menuItems || res.items || (Array.isArray(res) ? res : []);
         if (Array.isArray(items) && items.length > 0) {
-          setFeaturedItems(items.slice(0, 8));
+          setDishes(items);
         }
       } catch (err) {
-        console.warn('Using fallback featured dishes:', err);
+        console.warn('Using fallback dishes:', err);
       }
     };
-    fetchFeatured();
+    fetchDishes();
   }, []);
 
   const handleSelectCategory = (categoryId) => {
@@ -39,6 +38,8 @@ export const WebHomePage = () => {
       navigate(`/menu?category=${encodeURIComponent(categoryId)}`);
     }
   };
+
+  const featuredItems = dishes.filter((i) => i.featured).slice(0, 8);
 
   return (
     <div
@@ -95,22 +96,25 @@ export const WebHomePage = () => {
         </div>
       </div>
 
-      {/* 1. Figma Inspired Hero Section */}
+      {/* 1. Figma Inspired Emerald Hero Section */}
       <WebHeroFigma />
 
-      {/* 2. Category Navigation Bar */}
+      {/* 2. Signature Foodie App UI Kit Showcase (Floating Dish Plates) */}
+      <WebFoodieSection dishes={dishes} />
+
+      {/* 3. Category Navigation Bar */}
       <WebCategoryBar
         activeCategory={activeCategory}
         onSelectCategory={handleSelectCategory}
       />
 
-      {/* 3. Special Deals & Promotional Cards */}
+      {/* 4. Special Deals & Promotional Cards */}
       <WebSpecialOffers />
 
-      {/* 4. Featured Campus Favorites Grid */}
+      {/* 5. Featured Campus Favorites Grid */}
       <WebFeaturedDishes dishes={featuredItems} />
 
-      {/* 5. Benefits & Trust Matrix */}
+      {/* 6. Benefits & Trust Matrix */}
       <WebBenefitsSection />
     </div>
   );
