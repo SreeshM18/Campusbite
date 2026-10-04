@@ -273,18 +273,25 @@ async function request(endpoint, options = {}) {
   try {
     const response = await fetch(url, config);
     
-    // If backend returns a genuine 404 on API_BASE === '/api' (static Netlify host), fallback to demo simulation
-    if (response.status === 404 && API_BASE === '/api') {
-      return await handleMockFallback(endpoint, options);
+    // Check if the response returned HTML (e.g. Netlify SPA rewrite /* /index.html 200) or 404
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('text/html') || response.status === 404) {
+      if (API_BASE === '/api' || !import.meta.env.VITE_API_URL) {
+        return await handleMockFallback(endpoint, options);
+      }
     }
 
-    const data = await response.json().catch(() => ({}));
+    const data = await response.json().catch(() => null);
 
-    if (!response.ok) {
-      const error = new Error(data.message || `Request failed with status ${response.status}`);
+    // If response was not valid JSON or response was not OK, fallback in static mode
+    if (!data || !response.ok) {
+      if (API_BASE === '/api' || !import.meta.env.VITE_API_URL) {
+        return await handleMockFallback(endpoint, options);
+      }
+      const error = new Error(data?.message || `Request failed with status ${response.status}`);
       error.status = response.status;
       error.data = data;
-      error.errors = data.errors || {};
+      error.errors = data?.errors || {};
       throw error;
     }
 

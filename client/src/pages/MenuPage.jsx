@@ -10,12 +10,14 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { Button } from '../components/ui/Button';
 import { Sparkles, Clock, AlertCircle, RotateCcw, Utensils, Zap, MapPin } from 'lucide-react';
 
+import { initialMenuItems } from '../data/fallbackMenu';
+
 export const MenuPage = () => {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [rawMenuItems, setRawMenuItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [rawMenuItems, setRawMenuItems] = useState(initialMenuItems);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Sync state with URL search params
@@ -49,16 +51,17 @@ export const MenuPage = () => {
   // Fetch full menu from backend API
   const fetchMenu = async () => {
     try {
-      setLoading(true);
       setError(null);
       const res = await menuApi.getMenu();
       const items = res.data || res.menuItems || res.items || (Array.isArray(res) ? res : []);
-      if (Array.isArray(items)) {
+      if (Array.isArray(items) && items.length > 0) {
         setRawMenuItems(items);
+      } else {
+        setRawMenuItems(initialMenuItems);
       }
     } catch (err) {
-      console.error('[Menu Fetch Error]:', err);
-      setError(err.message || 'Unable to connect to canteen menu service.');
+      console.warn('[Menu Fetch Fallback Active]:', err.message);
+      setRawMenuItems(initialMenuItems);
     } finally {
       setLoading(false);
     }

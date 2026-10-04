@@ -2,7 +2,7 @@
  * CampusBite Full Realistic Food Universe (114 Seeded Dishes)
  * Categories: BREAKFAST, MEALS, FAST_FOOD, SNACKS, BEVERAGES, DESSERTS, HEALTHY
  */
-export const initialMenuItems = [
+const rawMenuItemsList = [
   // ==========================================
   // 1. BREAKFAST & TIFFIN (16 items)
   // ==========================================
@@ -1627,3 +1627,22 @@ export const initialMenuItems = [
     spiceLevel: 'MILD'
   }
 ];
+
+export const initialMenuItems = rawMenuItemsList.map((item, idx) => ({
+  _id: `dish_${String(idx + 1).padStart(4, '0')}`,
+  ...item,
+  imageUrl: item.image || '/images/masala_dosa.jpg',
+  image: item.image || '/images/masala_dosa.jpg',
+  subcategory: item.subcategory || item.subCategory || 'ALL',
+  subCategory: item.subcategory || item.subCategory || 'ALL',
+  foodType: item.foodType || 'VEG',
+  available: item.available !== false,
+  isAvailable: item.available !== false,
+  availabilityStatus: item.available !== false ? 'AVAILABLE' : 'UNAVAILABLE',
+  preparationTime: item.preparationTime || 10,
+  prepTimeMinutes: item.preparationTime || 10,
+  featured: !!item.featured,
+  isFeatured: !!item.featured,
+  totalOrdersCount: 15 + (idx % 20)
+}));
+

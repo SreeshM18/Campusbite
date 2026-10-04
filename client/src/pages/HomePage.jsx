@@ -17,22 +17,26 @@ import {
   Store
 } from 'lucide-react';
 
+import { initialMenuItems } from '../data/fallbackMenu';
+
 export const HomePage = () => {
-  const [featuredItems, setFeaturedItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [featuredItems, setFeaturedItems] = useState(() => initialMenuItems.filter((i) => i.featured).slice(0, 4));
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        setLoading(true);
         const res = await menuApi.getMenu({ featured: true });
         const items = res.data || res.menuItems || res.items || (Array.isArray(res) ? res : []);
         if (Array.isArray(items) && items.length > 0) {
           setFeaturedItems(items.slice(0, 4));
+        } else {
+          setFeaturedItems(initialMenuItems.filter((i) => i.featured).slice(0, 4));
         }
       } catch (err) {
         console.warn('Failed to load featured items:', err);
+        setFeaturedItems(initialMenuItems.filter((i) => i.featured).slice(0, 4));
       } finally {
         setLoading(false);
       }
