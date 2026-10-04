@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Dashboard — ByteBite Staff Portal</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 w-full border-b border-white/10 bg-slate-900/90 backdrop-blur-xl shadow-2xl shadow-black/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/30 font-black text-xl">
+                    <i class="fas fa-kitchen-set"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-black tracking-tight text-white block leading-tight">
+                        Byte<span class="text-orange-500">Bite</span>
+                    </span>
+                    <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider block -mt-0.5">
+                        Kitchen & Counter 2 Console
+                    </span>
+                </div>
+            </div>
+
+            <!-- Header Action Controls -->
+            <div class="flex items-center gap-3">
+                
+                <!-- Audio Alert Toggle -->
+                <button 
+                    onclick="toggleSoundAlerts()"
+                    class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 border border-slate-700 flex items-center gap-2 transition-all"
+                >
+                    <i id="soundToggleIcon" class="fas fa-volume-high text-emerald-400"></i>
+                    <span id="soundToggleLabel">Audio Alerts: ON</span>
+                </button>
+
+                <!-- Student Portal Link -->
+                <a 
+                    href="index.html" 
+                    target="_blank"
+                    class="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-200 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all"
+                >
+                    <i class="fas fa-arrow-up-right-from-square text-orange-400"></i>
+                    <span>Customer Menu</span>
+                </a>
+
+                <!-- Staff Info & Logout -->
+                <div class="flex items-center gap-3 pl-2 border-l border-slate-800">
+                    <div class="text-right hidden sm:block">
+                        <span id="staffName" class="text-xs font-black text-white block leading-tight">Chef Marcus</span>
+                        <span class="text-[10px] font-bold text-emerald-400 block">Counter 2 (Online)</span>
+                    </div>
+                    <button 
+                        onclick="logout()" 
+                        class="px-3 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-black transition-all border border-red-500/30 flex items-center gap-1.5"
+                    >
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="hidden sm:inline">Logout</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- Dashboard Navigation Switcher & Live Pulse -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 shadow-xl">
+                <button 
+                    id="tabBtnOrders" 
+                    onclick="switchAdminTab('orders')"
+                    class="px-5 py-2.5 rounded-xl font-black text-xs bg-orange-500 text-white shadow-md shadow-orange-500/20 transition-all flex items-center gap-2"
+                >
+                    <i class="fas fa-list-check"></i>
+                    <span>Incoming Pre-Orders</span>
+                </button>
+                <button 
+                    id="tabBtnMenu" 
+                    onclick="switchAdminTab('menu')"
+                    class="px-5 py-2.5 rounded-xl font-bold text-xs text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2"
+                >
+                    <i class="fas fa-utensils"></i>
+                    <span>Menu Stock & Pricing</span>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2 bg-slate-900/80 px-4 py-2 rounded-2xl border border-slate-800 text-xs font-bold text-slate-300">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                <span>Live Kitchen Stream Active</span>
+            </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            
+            <!-- Total Orders -->
+            <div class="p-5 rounded-3xl bg-slate-900/80 border border-slate-800 shadow-xl space-y-1">
+                <span class="text-[10px] font-black uppercase tracking-wider text-slate-400 block">Total Today</span>
+                <div id="statTotal" class="text-3xl font-black text-white font-mono">0</div>
+                <span class="text-[10px] text-slate-500 font-bold">Incoming tickets</span>
+            </div>
+
+            <!-- Pending -->
+            <div class="p-5 rounded-3xl bg-slate-900/80 border border-amber-500/30 shadow-xl space-y-1">
+                <span class="text-[10px] font-black uppercase tracking-wider text-amber-400 block">New / Pending</span>
+                <div id="statPending" class="text-3xl font-black text-amber-400 font-mono">0</div>
+                <span class="text-[10px] text-slate-500 font-bold">Needs cooking start</span>
+            </div>
+
+            <!-- In Kitchen (Preparing) -->
+            <div class="p-5 rounded-3xl bg-slate-900/80 border border-blue-500/30 shadow-xl space-y-1">
+                <span class="text-[10px] font-black uppercase tracking-wider text-blue-400 block">In Kitchen</span>
+                <div id="statPreparing" class="text-3xl font-black text-blue-400 font-mono">0</div>
+                <span class="text-[10px] text-slate-500 font-bold">Currently preparing</span>
+            </div>
+
+            <!-- Ready for Pickup -->
+            <div class="p-5 rounded-3xl bg-slate-900/80 border border-emerald-500/30 shadow-xl space-y-1">
+                <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400 block">Ready at Counter 2</span>
+                <div id="statReady" class="text-3xl font-black text-emerald-400 font-mono">0</div>
+                <span class="text-[10px] text-slate-500 font-bold">Awaiting student pickup</span>
+            </div>
+
+            <!-- Total Revenue -->
+            <div class="p-5 rounded-3xl bg-slate-900/80 border border-orange-500/30 shadow-xl space-y-1 col-span-2 sm:col-span-1">
+                <span class="text-[10px] font-black uppercase tracking-wider text-orange-400 block">Canteen Sales</span>
+                <div id="statRevenue" class="text-3xl font-black text-orange-400 font-mono">₹0</div>
+                <span class="text-[10px] text-slate-500 font-bold">Today's total revenue</span>
+            </div>
+
+        </div>
+
+        <!-- ── TAB 1: Live Pre-Orders Queue ── -->
+        <div id="adminOrdersSection" class="space-y-6">
+            
+            <!-- Filter & Search Controls -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900/85 p-4 rounded-2xl border border-slate-800 shadow-xl">
+                <div>
+                    <h2 class="text-lg font-black text-white">Live Kitchen Orders Queue</h2>
+                    <p id="orderCountLabel" class="text-xs text-slate-400 font-semibold mt-0.5">0 orders placed today</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                    <!-- Status Tabs -->
+                    <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                        <button id="filterBtn-ALL" onclick="setOrderStatusFilter('ALL')" class="px-3 py-1.5 rounded-lg text-xs font-black bg-orange-500 text-white">
+                            All
+                        </button>
+                        <button id="filterBtn-ACTIVE" onclick="setOrderStatusFilter('ACTIVE')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                            Active
+                        </button>
+                        <button id="filterBtn-READY_FOR_PICKUP" onclick="setOrderStatusFilter('READY_FOR_PICKUP')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                            Ready
+                        </button>
+                        <button id="filterBtn-COMPLETED" onclick="setOrderStatusFilter('COMPLETED')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white">
+                            Done
+                        </button>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="relative flex-1 sm:w-48">
+                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Filter token or name..." 
+                            oninput="handleOrderSearch(this.value)"
+                            class="w-full pl-8 pr-3 py-1.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-orange-500"
+                        >
+                    </div>
+
+                    <button 
+                        onclick="loadOrders()" 
+                        class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 border border-slate-700"
+                    >
+                        <i class="fas fa-rotate"></i>
+                        <span>Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Orders Table Card -->
+            <div class="rounded-3xl bg-slate-900/80 border border-slate-800 overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider font-black">
+                                <th class="py-4 px-4">Token</th>
+                                <th class="py-4 px-4">Student Name</th>
+                                <th class="py-4 px-4">Ordered Items & Notes</th>
+                                <th class="py-4 px-4">Total</th>
+                                <th class="py-4 px-4">Pickup Slot</th>
+                                <th class="py-4 px-4">Time</th>
+                                <th class="py-4 px-4">Status</th>
+                                <th class="py-4 px-4 text-right">Kitchen Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── TAB 2: Menu Stock & Availability Manager ── -->
+        <div id="adminMenuSection" class="space-y-6 hidden">
+            
+            <div class="flex items-center justify-between bg-slate-900/85 p-4 rounded-2xl border border-slate-800 shadow-xl">
+                <div>
+                    <h2 class="text-lg font-black text-white">Menu Stock & Real-Time Availability</h2>
+                    <p class="text-xs text-slate-400 font-semibold mt-0.5">Toggle out-of-stock items in real-time for student pre-orders</p>
+                </div>
+            </div>
+
+            <!-- Menu Items Table -->
+            <div class="rounded-3xl bg-slate-900/80 border border-slate-800 overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider font-black">
+                                <th class="py-4 px-4">Item Name & Category</th>
+                                <th class="py-4 px-4">Diet Type</th>
+                                <th class="py-4 px-4">Price</th>
+                                <th class="py-4 px-4">Prep Estimate</th>
+                                <th class="py-4 px-4">Stock Status</th>
+                                <th class="py-4 px-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="menuTableBody" class="divide-y divide-slate-800/60"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        <p>ByteBite Kitchen Management Console • Counter 2 Express Food Bar</p>
+    </footer>
+
+    <!-- Script Imports -->
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
