@@ -66,8 +66,9 @@ export const SUBCATEGORIES_BY_CATEGORY = {
 };
 
 /**
- * CampusBite CategoryNav & Search/Filter Toolbar
- * Handles full-text instant search, dietary filtering, subcategory tabs, and quick campus filters.
+ * CategoryNav Component
+ * Handles instant search, dietary filtering, category tabs, and quick campus filters.
+ * Built with rock-solid flexbox alignment to prevent any icon displacement or mobile layout shifts.
  */
 export const CategoryNav = ({
   activeCategory = 'ALL',
@@ -102,63 +103,61 @@ export const CategoryNav = ({
     <div
       className="category-nav-wrapper"
       style={{
-        marginBottom: '2rem',
+        marginBottom: '1.75rem',
         display: 'flex',
         flexDirection: 'column',
-        gap: '1rem'
+        gap: '0.85rem'
       }}
     >
-      {/* Top Controls Row: Search Input & Dietary Segmented Filter */}
+      {/* 1. Search Bar & Dietary Filter Row */}
       <div
         style={{
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '1rem'
+          gap: '0.75rem'
         }}
       >
-        {/* Search Input Box */}
+        {/* Search Input Container — True Flexbox Centering */}
         <div
           role="search"
           style={{
-            position: 'relative',
-            flex: '1 1 300px',
-            maxWidth: '540px'
+            display: 'flex',
+            alignItems: 'center',
+            flex: '1 1 280px',
+            maxWidth: '540px',
+            height: '46px',
+            borderRadius: '100px',
+            backgroundColor: 'var(--color-surface)',
+            border: '1.5px solid var(--color-border)',
+            padding: '0 14px',
+            gap: '10px',
+            boxSizing: 'border-box',
+            boxShadow: 'var(--shadow-xs)',
+            transition: 'border-color 0.2s'
           }}
         >
-          <div
-            style={{
-              position: 'absolute',
-              left: '14px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--color-text-muted)',
-              display: 'flex',
-              alignItems: 'center',
-              pointerEvents: 'none'
-            }}
-          >
-            <Search size={18} />
-          </div>
+          <Search size={18} color="var(--color-text-muted)" style={{ flexShrink: 0 }} />
 
           <input
             ref={searchInputRef}
             type="text"
-            placeholder="Search 114+ campus dishes (e.g. Biryani, Dosa, Watermelon, Chai)..."
+            placeholder="Search 114+ campus dishes (e.g. Biryani, Dosa, Chai)..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            aria-label="Search dishes by name, subcategory or category"
-            className="form-input focus-ring"
+            aria-label="Search dishes"
             style={{
-              paddingLeft: '40px',
-              paddingRight: searchQuery ? '40px' : '14px',
-              borderRadius: 'var(--radius-full)',
-              backgroundColor: 'var(--color-surface)',
-              border: '1.5px solid var(--color-border)',
-              height: '46px',
-              fontSize: '0.92rem'
+              flex: 1,
+              height: '100%',
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              fontSize: '0.92rem',
+              color: 'var(--color-text-primary)',
+              padding: 0,
+              minWidth: 0
             }}
           />
 
@@ -167,22 +166,19 @@ export const CategoryNav = ({
               type="button"
               onClick={handleClearSearch}
               style={{
-                position: 'absolute',
-                right: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
+                background: 'var(--color-surface-subtle)',
+                border: 'none',
                 color: 'var(--color-text-muted)',
-                padding: '4px',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderRadius: '50%',
-                backgroundColor: 'var(--color-surface-subtle)',
-                border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                flexShrink: 0
               }}
-              aria-label="Clear search input"
-              title="Clear search"
+              aria-label="Clear search"
             >
               <X size={14} />
             </button>
@@ -196,7 +192,7 @@ export const CategoryNav = ({
             alignItems: 'center',
             backgroundColor: 'var(--color-surface)',
             padding: '3px',
-            borderRadius: 'var(--radius-full)',
+            borderRadius: '100px',
             border: '1.5px solid var(--color-border)',
             boxShadow: 'var(--shadow-xs)'
           }}
@@ -208,15 +204,15 @@ export const CategoryNav = ({
             onClick={() => onSelectFoodType('ALL')}
             aria-pressed={activeFoodType === 'ALL'}
             style={{
-              padding: '0.45rem 0.95rem',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '0.84rem',
+              padding: '0.4rem 0.85rem',
+              borderRadius: '100px',
+              fontSize: '0.82rem',
               fontWeight: 700,
               backgroundColor: activeFoodType === 'ALL' ? 'var(--color-brand-secondary)' : 'transparent',
               color: activeFoodType === 'ALL' ? '#ffffff' : 'var(--color-text-secondary)',
               border: 'none',
               cursor: 'pointer',
-              transition: 'all var(--transition-fast)'
+              transition: 'all 0.15s'
             }}
           >
             All Diets
@@ -229,16 +225,16 @@ export const CategoryNav = ({
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              padding: '0.45rem 0.95rem',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '0.84rem',
+              gap: '5px',
+              padding: '0.4rem 0.85rem',
+              borderRadius: '100px',
+              fontSize: '0.82rem',
               fontWeight: 700,
               backgroundColor: activeFoodType === 'VEG' ? 'var(--color-veg-bg)' : 'transparent',
               color: activeFoodType === 'VEG' ? 'var(--color-veg)' : 'var(--color-text-secondary)',
               border: activeFoodType === 'VEG' ? '1px solid var(--color-veg-border)' : '1px solid transparent',
               cursor: 'pointer',
-              transition: 'all var(--transition-fast)'
+              transition: 'all 0.15s'
             }}
           >
             <FoodTypeIndicator isVeg={true} size="sm" />
@@ -252,16 +248,16 @@ export const CategoryNav = ({
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              padding: '0.45rem 0.95rem',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '0.84rem',
+              gap: '5px',
+              padding: '0.4rem 0.85rem',
+              borderRadius: '100px',
+              fontSize: '0.82rem',
               fontWeight: 700,
               backgroundColor: activeFoodType === 'NON_VEG' ? 'var(--color-nonveg-bg)' : 'transparent',
               color: activeFoodType === 'NON_VEG' ? 'var(--color-nonveg)' : 'var(--color-text-secondary)',
               border: activeFoodType === 'NON_VEG' ? '1px solid var(--color-nonveg-border)' : '1px solid transparent',
               cursor: 'pointer',
-              transition: 'all var(--transition-fast)'
+              transition: 'all 0.15s'
             }}
           >
             <FoodTypeIndicator isVeg={false} size="sm" />
@@ -270,7 +266,7 @@ export const CategoryNav = ({
         </div>
       </div>
 
-      {/* Primary Category Navigation Segmented Bar */}
+      {/* 2. Primary Category Horizontal Scrolling Bar */}
       <div
         style={{
           display: 'flex',
@@ -282,7 +278,7 @@ export const CategoryNav = ({
           WebkitOverflowScrolling: 'touch'
         }}
         role="tablist"
-        aria-label="Canteen food primary categories"
+        aria-label="Canteen food categories"
       >
         {CATEGORIES.map((cat) => {
           const Icon = cat.icon;
@@ -298,15 +294,15 @@ export const CategoryNav = ({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.45rem',
-                padding: '0.55rem 1.15rem',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '0.88rem',
-                fontWeight: isSelected ? 700 : 600,
+                padding: '0.5rem 1.1rem',
+                borderRadius: '100px',
+                fontSize: '0.86rem',
+                fontWeight: isSelected ? 800 : 600,
                 backgroundColor: isSelected ? 'var(--color-brand-primary)' : 'var(--color-surface)',
                 color: isSelected ? '#ffffff' : 'var(--color-text-secondary)',
                 border: isSelected ? '1.5px solid var(--color-brand-primary)' : '1.5px solid var(--color-border)',
                 boxShadow: isSelected ? 'var(--shadow-warm)' : 'var(--shadow-xs)',
-                transition: 'all var(--transition-fast)',
+                transition: 'all 0.15s ease',
                 whiteSpace: 'nowrap',
                 flexShrink: 0,
                 cursor: 'pointer'
@@ -319,7 +315,7 @@ export const CategoryNav = ({
         })}
       </div>
 
-      {/* Dynamic Subcategory Filter Pills (Rendered when a primary category is selected) */}
+      {/* 3. Subcategories (Shown when a category with subcategories is active) */}
       {currentSubcategories && (
         <div
           style={{
@@ -332,7 +328,7 @@ export const CategoryNav = ({
             WebkitOverflowScrolling: 'touch'
           }}
           role="group"
-          aria-label="Subcategory filter options"
+          aria-label="Subcategories"
         >
           {currentSubcategories.map((sub) => {
             const isSubSelected = activeSubcategory === sub.id;
@@ -345,14 +341,14 @@ export const CategoryNav = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   padding: '0.35rem 0.85rem',
-                  borderRadius: 'var(--radius-full)',
-                  fontSize: '0.8rem',
-                  fontWeight: isSubSelected ? 700 : 500,
+                  borderRadius: '100px',
+                  fontSize: '0.78rem',
+                  fontWeight: isSubSelected ? 800 : 500,
                   backgroundColor: isSubSelected ? 'var(--color-surface-sunken)' : 'var(--color-surface-subtle)',
                   color: isSubSelected ? 'var(--color-brand-primary)' : 'var(--color-text-secondary)',
                   border: isSubSelected ? '1.5px solid var(--color-brand-primary)' : '1px solid var(--color-border-subtle)',
                   cursor: 'pointer',
-                  transition: 'all var(--transition-fast)',
+                  transition: 'all 0.15s',
                   whiteSpace: 'nowrap',
                   flexShrink: 0
                 }}
@@ -364,148 +360,113 @@ export const CategoryNav = ({
         </div>
       )}
 
-      {/* Quick Picks / Campus Filter Row */}
+      {/* 4. Quick Filters & Result Counter on One Compact Line */}
       <div
         style={{
           display: 'flex',
-          flexWrap: 'wrap',
           alignItems: 'center',
-          gap: '0.5rem'
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+          paddingTop: '2px'
         }}
       >
-        <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-muted)' }}>
-          Quick Filter:
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', overflowX: 'auto', scrollbarWidth: 'none' }}>
+          <button
+            type="button"
+            onClick={() => onSelectQuickFilter(activeQuickFilter === 'under50' ? 'ALL' : 'under50')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '0.25rem 0.65rem',
+              borderRadius: '100px',
+              fontSize: '0.76rem',
+              fontWeight: 700,
+              backgroundColor: activeQuickFilter === 'under50' ? '#ecfdf5' : 'var(--color-surface)',
+              color: activeQuickFilter === 'under50' ? '#047857' : 'var(--color-text-secondary)',
+              border: activeQuickFilter === 'under50' ? '1px solid #10b981' : '1px solid var(--color-border)',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}
+          >
+            <Tag size={11} /> <span>Under ₹50</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => onSelectQuickFilter(activeQuickFilter === 'under50' ? 'ALL' : 'under50')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '4px',
-            padding: '0.3rem 0.75rem',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '0.78rem',
-            fontWeight: 600,
-            backgroundColor: activeQuickFilter === 'under50' ? '#ecfdf5' : 'var(--color-surface)',
-            color: activeQuickFilter === 'under50' ? '#047857' : 'var(--color-text-secondary)',
-            border: activeQuickFilter === 'under50' ? '1px solid #10b981' : '1px solid var(--color-border)',
-            cursor: 'pointer',
-            transition: 'all var(--transition-fast)'
-          }}
-        >
-          <Tag size={12} />
-          <span>Under ₹50</span>
-        </button>
+          <button
+            type="button"
+            onClick={() => onSelectQuickFilter(activeQuickFilter === 'fastprep' ? 'ALL' : 'fastprep')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '0.25rem 0.65rem',
+              borderRadius: '100px',
+              fontSize: '0.76rem',
+              fontWeight: 700,
+              backgroundColor: activeQuickFilter === 'fastprep' ? '#eff6ff' : 'var(--color-surface)',
+              color: activeQuickFilter === 'fastprep' ? '#1d4ed8' : 'var(--color-text-secondary)',
+              border: activeQuickFilter === 'fastprep' ? '1px solid #3b82f6' : '1px solid var(--color-border)',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}
+          >
+            <Clock size={11} /> <span>Ready &lt; 10m</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => onSelectQuickFilter(activeQuickFilter === 'fastprep' ? 'ALL' : 'fastprep')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '4px',
-            padding: '0.3rem 0.75rem',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '0.78rem',
-            fontWeight: 600,
-            backgroundColor: activeQuickFilter === 'fastprep' ? '#eff6ff' : 'var(--color-surface)',
-            color: activeQuickFilter === 'fastprep' ? '#1d4ed8' : 'var(--color-text-secondary)',
-            border: activeQuickFilter === 'fastprep' ? '1px solid #3b82f6' : '1px solid var(--color-border)',
-            cursor: 'pointer',
-            transition: 'all var(--transition-fast)'
-          }}
-        >
-          <Clock size={12} />
-          <span>Ready &lt; 10 mins</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onSelectQuickFilter(activeQuickFilter === 'featured' ? 'ALL' : 'featured')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '4px',
-            padding: '0.3rem 0.75rem',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '0.78rem',
-            fontWeight: 600,
-            backgroundColor: activeQuickFilter === 'featured' ? '#fff7ed' : 'var(--color-surface)',
-            color: activeQuickFilter === 'featured' ? '#c2410c' : 'var(--color-text-secondary)',
-            border: activeQuickFilter === 'featured' ? '1px solid #f97316' : '1px solid var(--color-border)',
-            cursor: 'pointer',
-            transition: 'all var(--transition-fast)'
-          }}
-        >
-          <Sparkles size={12} />
-          <span>Chef Specials</span>
-        </button>
-      </div>
-
-      {/* Live Result Counter & Reset Button */}
-      {totalResults !== null && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 4px',
-            fontSize: '0.82rem',
-            color: 'var(--color-text-muted)',
-            fontWeight: 500
-          }}
-        >
-          <span>
-            Showing <strong style={{ color: 'var(--color-text-primary)' }}>{totalResults}</strong> {totalResults === 1 ? 'dish' : 'dishes'}
-            {searchQuery && <> matching &ldquo;<strong>{searchQuery}</strong>&rdquo;</>}
-          </span>
-
-          {(activeCategory !== 'ALL' || (activeSubcategory && activeSubcategory !== 'ALL') || activeFoodType !== 'ALL' || activeQuickFilter !== 'ALL' || searchQuery) && (
-            <button
-              type="button"
-              onClick={onResetAll}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--color-brand-primary)',
-                fontWeight: 600,
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-                padding: '0.4rem 0.6rem',
-                minHeight: '36px'
-              }}
-            >
-              Reset All Filters
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => onSelectQuickFilter(activeQuickFilter === 'featured' ? 'ALL' : 'featured')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '0.25rem 0.65rem',
+              borderRadius: '100px',
+              fontSize: '0.76rem',
+              fontWeight: 700,
+              backgroundColor: activeQuickFilter === 'featured' ? '#fff7ed' : 'var(--color-surface)',
+              color: activeQuickFilter === 'featured' ? '#c2410c' : 'var(--color-text-secondary)',
+              border: activeQuickFilter === 'featured' ? '1px solid #f97316' : '1px solid var(--color-border)',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}
+          >
+            <Sparkles size={11} /> <span>Specials</span>
+          </button>
         </div>
-      )}
 
-      <style>{`
-        @media (max-width: 640px) {
-          .category-nav-wrapper > div:first-child {
-            flex-direction: column !important;
-            align-items: stretch !important;
-          }
-          .category-nav-wrapper [role="search"] {
-            max-width: 100% !important;
-            width: 100% !important;
-          }
-          .category-nav-wrapper [role="group"][aria-label="Filter by dietary preference"] {
-            display: flex !important;
-            width: 100% !important;
-            justify-content: space-between !important;
-          }
-          .category-nav-wrapper [role="group"][aria-label="Filter by dietary preference"] button {
-            flex: 1 !important;
-            justify-content: center !important;
-            min-height: 40px !important;
-            padding: 0.4rem 0.5rem !important;
-          }
-        }
-      `}</style>
+        {/* Total results count & Reset */}
+        {totalResults !== null && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+            <span>
+              Showing <strong style={{ color: 'var(--color-text-primary)' }}>{totalResults}</strong> dishes
+            </span>
+            {(activeCategory !== 'ALL' || (activeSubcategory && activeSubcategory !== 'ALL') || activeFoodType !== 'ALL' || activeQuickFilter !== 'ALL' || searchQuery) && (
+              <button
+                type="button"
+                onClick={onResetAll}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--color-brand-primary)',
+                  fontWeight: 700,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  padding: 0
+                }}
+              >
+                Reset
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
+
+export default CategoryNav;

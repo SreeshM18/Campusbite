@@ -150,11 +150,12 @@ export const MenuPage = () => {
   };
 
   return (
-    <PageContainer size="standard" paddingY="md">
+    <PageContainer size="standard" paddingY="md" style={{ paddingTop: '1.25rem' }}>
       {/* 1. Context & Campus Greeting Header */}
       <div
         style={{
-          marginBottom: '1.75rem',
+          marginTop: '0.25rem',
+          marginBottom: '1.5rem',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.65rem'
@@ -186,10 +187,18 @@ export const MenuPage = () => {
           }}
         >
           <div>
-            <h1 className="type-h1" style={{ color: 'var(--color-text-primary)' }}>
+            <h1
+              className="type-h1"
+              style={{
+                color: 'var(--color-text-primary)',
+                margin: 0,
+                lineHeight: 1.2,
+                fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)'
+              }}
+            >
               {getGreeting()}
             </h1>
-            <p className="type-body-lg" style={{ color: 'var(--color-text-secondary)', marginTop: '0.25rem' }}>
+            <p className="type-body-lg" style={{ color: 'var(--color-text-secondary)', marginTop: '0.35rem', marginBottom: 0 }}>
               Pre-order ahead, skip the standing line, and pick up hot food seamlessly with your digital token.
             </p>
           </div>
