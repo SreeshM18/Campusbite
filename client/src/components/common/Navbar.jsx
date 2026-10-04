@@ -76,7 +76,7 @@ export const Navbar = () => {
               >
                 Campus<span style={{ color: 'var(--brand-primary)' }}>Bite</span>
               </span>
-              <span style={{ display: 'block', fontSize: '0.68rem', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '-4px' }}>
+              <span className="brand-subtitle" style={{ display: 'block', fontSize: '0.68rem', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginTop: '-4px' }}>
                 Smart Canteen Pre-Order
               </span>
             </div>
@@ -272,7 +272,7 @@ export const Navbar = () => {
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{ display: 'none', alignItems: 'center', gap: '0.5rem' }} className="desktop-auth-btns">
                 <Link to="/login" className="btn btn-ghost btn-sm" style={{ minHeight: '40px' }}>
                   Sign In
                 </Link>
@@ -366,6 +366,26 @@ export const Navbar = () => {
                 </Link>
               </>
             )}
+            {!user && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="btn btn-outline btn-block"
+                  style={{ minHeight: '44px', justifyContent: 'center' }}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="btn btn-primary btn-block"
+                  style={{ minHeight: '44px', justifyContent: 'center' }}
+                >
+                  Create Account
+                </Link>
+              </div>
+            )}
             {user && (
               <div style={{ paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', padding: '0 0.5rem' }}>Signed in as <strong>{user.name}</strong> ({user.role})</p>
@@ -387,11 +407,13 @@ export const Navbar = () => {
       <style>{`
         @media (min-width: 768px) {
           .desktop-nav { display: flex !important; }
+          .desktop-auth-btns { display: flex !important; }
           .user-badge-text { display: flex !important; }
           .logout-text { display: inline !important; }
         }
         @media (max-width: 767px) {
           .mobile-menu-btn { display: flex !important; }
+          .brand-subtitle { display: none !important; }
         }
       `}</style>
     </header>
