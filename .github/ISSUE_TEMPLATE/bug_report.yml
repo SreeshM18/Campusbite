@@ -1,0 +1,63 @@
+name: "🐛 Bug Report"
+description: "Report a reproducible problem or unexpected behavior in CampusBite"
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue in CampusBite! Please fill out the sections below.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of the bug.
+      placeholder: Describe what happened...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to reproduce the behavior.
+      placeholder: |
+        1. Login as Student / Staff
+        2. Navigate to '...'
+        3. Click on '...'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior / Screenshots / Logs
+      description: Provide browser console logs, server error outputs, or screenshot links.
+    validations:
+      required: false
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Execution Environment
+      description: How are you running CampusBite?
+      options:
+        - Local Development (Node.js + MongoDB + Vite)
+        - Production Deployment (Vercel / Render / Atlas)
+        - Docker Container
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: os_browser
+    attributes:
+      label: OS and Browser
+      description: e.g., Windows 11 / Chrome 124, macOS / Safari 17, iOS / Chrome
+      placeholder: Windows 11 / Chrome
+    validations:
+      required: false

@@ -1,0 +1,43 @@
+name: CampusBite CI Pipeline
+
+on:
+  push:
+    branches: [ main, development, 'feature/**', 'fix/**' ]
+  pull_request:
+    branches: [ main, development ]
+
+jobs:
+  test-and-build:
+    name: Test & Production Build Verification
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Monorepo & Service Dependencies
+        run: |
+          npm ci || npm install
+          npm --prefix server install
+          npm --prefix client install
+
+      - name: Run Backend Security & E2E Test Suites
+        run: |
+          node server/test_phase11.js
+          node server/test_phase12_e2e.js
+        env:
+          NODE_ENV: test
+          JWT_SECRET: ci_test_secret_key_1234567890_campusbite
+
+      - name: Build Frontend Production Bundle (Vite)
+        run: npm --prefix client run build
