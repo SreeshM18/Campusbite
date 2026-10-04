@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { UtensilsCrossed, Lock, Mail, User, AlertCircle, ArrowRight, GraduationCap, Briefcase, Eye, EyeOff } from 'lucide-react';
+import { UtensilsCrossed, Lock, Mail, User, AlertCircle, ArrowRight, GraduationCap, Briefcase, Eye, EyeOff, Smartphone } from 'lucide-react';
+import { OtpLoginModal } from '../components/auth/OtpLoginModal';
 
 export const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -9,6 +10,7 @@ export const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState('STUDENT');
+  const [isOtpOpen, setIsOtpOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -282,7 +284,35 @@ export const RegisterPage = () => {
             {loading ? 'Creating Account...' : 'Complete Registration'}
             {!loading && <ArrowRight size={18} />}
           </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', margin: '1rem 0 0.85rem', gap: '0.75rem' }}>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border-subtle)' }} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>or</span>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border-subtle)' }} />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsOtpOpen(true)}
+            className="btn btn-outline btn-lg"
+            style={{
+              width: '100%',
+              borderColor: '#10b981',
+              color: '#047857',
+              backgroundColor: '#f0fdf4',
+              fontWeight: 700,
+              gap: '0.5rem'
+            }}
+          >
+            <Smartphone size={18} color="#059669" /> Verify & Login via Mobile OTP
+          </button>
         </form>
+
+        {/* OTP Verification Modal */}
+        <OtpLoginModal
+          isOpen={isOtpOpen}
+          onClose={() => setIsOtpOpen(false)}
+        />
 
         {/* Footer Link */}
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
